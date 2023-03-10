@@ -26,7 +26,7 @@ spec:
       spec:
         forProvider:
           tags:
-            - key: Name
+            Name: name
 
     patches:
     - type: FromCompositeFieldPath
@@ -34,7 +34,7 @@ spec:
       toFieldPath: metadata.name
     - type: FromCompositeFieldPath
       fromFieldPath: spec.name
-      toFieldPath: spec.forProvider.tags[0].value
+      toFieldPath: spec.forProvider.tags.Name
     - type: FromCompositeFieldPath
       fromFieldPath: spec.cidr
       toFieldPath: spec.forProvider.cidrBlock
@@ -53,7 +53,7 @@ spec:
           vpcIdSelector:
             matchControllerRef: true
           tags:
-            - key: Name
+            Name: name
     patches:
     - type: CombineFromComposite
       combine:
@@ -62,7 +62,7 @@ spec:
         strategy: string
         string:
           fmt: "%s-private-1"
-      toFieldPath: spec.forProvider.tags[0].value
+      toFieldPath: spec.forProvider.tags.Name
     - type: FromCompositeFieldPath
       fromFieldPath: spec.subnets.privateOne.cidr
       toFieldPath: spec.forProvider.cidrBlock
@@ -84,7 +84,7 @@ spec:
           vpcIdSelector:
             matchControllerRef: true
           tags:
-            - key: Name
+            Name: name
     patches:
     - type: CombineFromComposite
       combine:
@@ -93,7 +93,7 @@ spec:
         strategy: string
         string:
           fmt: "%s-private-2"
-      toFieldPath: spec.forProvider.tags[0].value
+      toFieldPath: spec.forProvider.tags.Name
     - type: FromCompositeFieldPath
       fromFieldPath: spec.subnets.privateTwo.cidr
       toFieldPath: spec.forProvider.cidrBlock
@@ -115,7 +115,7 @@ spec:
           vpcIdSelector:
             matchControllerRef: true
           tags:
-            - key: Name
+            Name: name
     patches:
     - type: CombineFromComposite
       combine:
@@ -124,6 +124,7 @@ spec:
         strategy: string
         string:
           fmt: "%s-private-3"
+      toFieldPath: spec.forProvider.tags.Name
     - type: FromCompositeFieldPath
       fromFieldPath: spec.subnets.privateThree.cidr
       toFieldPath: spec.forProvider.cidrBlock
