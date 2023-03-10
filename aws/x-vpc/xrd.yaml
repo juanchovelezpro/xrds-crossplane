@@ -1,0 +1,90 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xawsnetworks.aws.devops.tools.com
+spec:
+  group: aws.devops.tools.com
+  names:
+    kind: XAWSNetwork
+    plural: xawsnetworks
+  claimNames:
+    kind: AWSNetwork
+    plural: awsnetworks
+  versions:
+  - name: v1alpha1
+    served: true
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              name:
+                type: string
+              cidr:
+                type: string
+              region:
+                type: string
+              providerConfigRef:
+                type: string
+              subnets:
+                type: object
+                properties:
+                  privateOne:
+                    type: object
+                    properties:
+                      cidr:
+                        type: string
+                      az:
+                        type: string
+                  privateTwo:
+                    type: object
+                    properties:
+                      cidr:
+                        type: string
+                      az:
+                        type: string
+                  privateThree: 
+                    type: object
+                    properties:
+                      cidr:
+                        type: string
+                      az:
+                        type: string
+                  # publicOne:
+                  #   type: object
+                  #   properties:
+                  #     cidr:
+                  #       type: string
+                  #     az:
+                  #       type: string
+                  # publicTwo:
+                  #   type: object
+                  #   properties:
+                  #     cidr:
+                  #       type: string
+                  #     az:
+                  #       type: string
+                  # publicThree:
+                  #   type: object
+                  #   properties:
+                  #     cidr:
+                  #       type: string
+                  #     az:
+                  #       type: string
+                  # dataOne:
+                  #   type: object
+                  #   properties:
+                  #     cidr:
+                  #       type: string
+                  #     az:
+                  #       type: string
+                  # dataTwo:
+                  #   type: object
+                  #   properties:
+                  #     cidr:
+                  #       type: string
+                  #     az:
+                  #       type: string            

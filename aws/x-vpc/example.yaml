@@ -1,0 +1,18 @@
+apiVersion: aws.devops.tools.com/v1alpha1
+kind: AWSNetwork
+metadata:
+  name: example
+spec:
+  name: example
+  cidr: 10.0.0.0/20
+  region: us-east-2
+  subnets: 
+    privateOne:
+      cidr: 10.0.1.0/24
+      az: us-east-2a
+    privateTwo:
+      cidr: 10.0.2.0/24
+      az: us-east-2b
+    privateThree:
+      cidr: 10.0.3.0/24
+      az: us-east-2c

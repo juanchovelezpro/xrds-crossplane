@@ -1,0 +1,134 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: vpc-composition
+  labels:
+    crossplane.io/xrd: xawsnetworks.aws.devops.tools.com
+    provider: aws
+spec:
+  writeConnectionSecretsToNamespace: crossplane
+  compositeTypeRef:
+    apiVersion: aws.devops.tools.com/v1alpha1
+    kind: XAWSNetwork
+
+  patchSets:
+  - name: common-injection
+    patches:
+    - type: FromCompositeFieldPath
+      fromFieldPath: spec.region
+      toFieldPath: spec.forProvider.region
+
+  resources:
+  - name: vpc
+    base:
+      apiVersion: ec2.aws.upbound.io/v1beta1
+      kind: VPC
+      spec:
+        forProvider:
+          tags:
+            - key: Name
+
+    patches:
+    - type: FromCompositeFieldPath
+      fromFieldPath: spec.name
+      toFieldPath: metadata.name
+    - type: FromCompositeFieldPath
+      fromFieldPath: spec.name
+      toFieldPath: spec.forProvider.tags[0].value
+    - type: FromCompositeFieldPath
+      fromFieldPath: spec.cidr
+      toFieldPath: spec.forProvider.cidrBlock
+    - type: PatchSet
+      patchSetName: common-injection
+
+  - name: subnet-private-one
+    base:
+      apiVersion: ec2.aws.upbound.io/v1beta1
+      kind: Subnet
+      metadata:
+        labels:
+          visibility: private
+      spec:
+        forProvider:
+          vpcIdSelector:
+            matchControllerRef: true
+          tags:
+            - key: Name
+    patches:
+    - type: CombineFromComposite
+      combine:
+        variables:
+        - fromFieldPath: spec.name
+        strategy: string
+        string:
+          fmt: "%s-private-1"
+      toFieldPath: spec.forProvider.tags[0].value
+    - type: FromCompositeFieldPath
+      fromFieldPath: spec.subnets.privateOne.cidr
+      toFieldPath: spec.forProvider.cidrBlock
+    - type: FromCompositeFieldPath
+      fromFieldPath: spec.subnets.privateOne.az
+      toFieldPath: spec.forProvider.availabilityZone
+    - type: PatchSet
+      patchSetName: common-injection
+
+  - name: subnet-private-two
+    base:
+      apiVersion: ec2.aws.upbound.io/v1beta1
+      kind: Subnet
+      metadata:
+        labels:
+          visibility: private
+      spec:
+        forProvider:
+          vpcIdSelector:
+            matchControllerRef: true
+          tags:
+            - key: Name
+    patches:
+    - type: CombineFromComposite
+      combine:
+        variables:
+        - fromFieldPath: spec.name
+        strategy: string
+        string:
+          fmt: "%s-private-2"
+      toFieldPath: spec.forProvider.tags[0].value
+    - type: FromCompositeFieldPath
+      fromFieldPath: spec.subnets.privateTwo.cidr
+      toFieldPath: spec.forProvider.cidrBlock
+    - type: FromCompositeFieldPath
+      fromFieldPath: spec.subnets.privateTwo.az
+      toFieldPath: spec.forProvider.availabilityZone
+    - type: PatchSet
+      patchSetName: common-injection
+
+  - name: subnet-private-three
+    base:
+      apiVersion: ec2.aws.upbound.io/v1beta1
+      kind: Subnet
+      metadata:
+        labels:
+          visibility: private
+      spec:
+        forProvider:
+          vpcIdSelector:
+            matchControllerRef: true
+          tags:
+            - key: Name
+    patches:
+    - type: CombineFromComposite
+      combine:
+        variables:
+        - fromFieldPath: spec.name
+        strategy: string
+        string:
+          fmt: "%s-private-3"
+    - type: FromCompositeFieldPath
+      fromFieldPath: spec.subnets.privateThree.cidr
+      toFieldPath: spec.forProvider.cidrBlock
+    - type: FromCompositeFieldPath
+      fromFieldPath: spec.subnets.privateThree.az
+      toFieldPath: spec.forProvider.availabilityZone
+    - type: PatchSet
+      patchSetName: common-injection
