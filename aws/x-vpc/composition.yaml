@@ -41,6 +41,29 @@ spec:
     - type: PatchSet
       patchSetName: common-injection
 
+  - name: internet-gateway
+    base:
+      apiVersion: ec2.aws.upbound.io/v1beta1
+      kind: InternetGateway
+      spec:
+        forProvider:
+          vpcIdSelector:
+            matchControllerRef: true
+          tags:
+            Name: name
+
+    patches:
+    - type: CombineFromComposite
+      combine:
+        variables:
+        - fromFieldPath: spec.name
+        strategy: string
+        string:
+          fmt: "%s-igw"
+      toFieldPath: spec.forProvider.tags.Name
+    - type: PatchSet
+      patchSetName: common-injection
+
   - name: subnet-private-one
     base:
       apiVersion: ec2.aws.upbound.io/v1beta1
